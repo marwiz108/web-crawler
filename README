@@ -1,0 +1,13 @@
+Web Crawler
+
+A web crawler that gathers and traverses a 'Fakebook' website to find 5 secret flags.
+
+I started this project by creating an SSL socket connection with the server. After inspecting the Network using Chrome dev tools and receiving a response from the first GET request to the login page, I had an idea of what was required in the HTTp requests, mainly I learned that I have to get a CSRF token from the server before I could proceed.
+
+Starting with the POST request to login, which once successfully sent I could proceed with handling the HTTP status codes. I also learned by trial and error that a new CSRF token and session ID would have to be retrieved for each request.
+
+After implementing the required functionalities in a simple format using only the main() function and helper functions, I then moved on to refactoring the code and placing the HTML parser into its own class to separate the responsibilities of the parser. Once that was refactored I put it together using a Makefile that allows the program to run as per the specification.
+
+There were quite a few challenges in this project. Firstly, a big obstacle was attempting to send the POST request for login. This was difficult because I had little knowledge of exactly how the request message should be formatted, since it had to be done from scratch. Once that was overcome and I successfully logged in, I ran into a redirect status code after logging in, which returned the url link along with some decoded carriage returns that were blocking me from being able to send further GET requests, as they returned 404 status codes when I attempted to send GET requests to those links. However after some attempts I realised it was still logging in correctly so I just added functionality that trims those carriage returns. Overall I found this project interesting as I have never built a HTTP response from scratch.
+
+To test whether the program was executing correctly, I first ran it on my local machine. This was very useful for debugging as the request responses gave quite a bit of useful info. I also ran the program from various locations (my local machine, the NEU wifi and VPN, and the Khoury server). I found that the majority of bugs/errors were found during the process of running and debugging the program on my local machine.
