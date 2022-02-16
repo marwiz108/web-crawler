@@ -127,7 +127,6 @@ def crawl_next_url(parser):
             break
         else: 
             parser.urls_queued.pop(0)
-    print('Queue: ' + str(len(parser.urls_queued)) + ' | Crawled: ' + str(len(parser.urls_crawled)) + ' | Flags: ' + str(len(parser.secret_flags)))
     return url
 
 def main():
