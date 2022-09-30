@@ -11,8 +11,7 @@ The main web crawler program that connects to the server using a socket.
 This program is responsible for sending requests to the fakebook server, and crawls
 through all the links on the website to look for 5 secret flags.
 '''
-USERNAME = sys.argv[-2]
-PASSWORD = sys.argv[-1]
+
 BUFFER_LEN = 4096
 HOST = "project2.5700.network"
 PORT = 443
@@ -99,14 +98,14 @@ def get_login_token(connection):
     csrf = cookie[cookie.index("csrftoken=")+len("csrftoken="):cookie.index(";")]
     return csrf
 
-def login_post_request(csrf_token):
+def login_post_request(csrf_token, username, password):
     '''
     Function:   login_post_request - builds the login http POST request to send to the connection
     Parameters: csrf_token - the csrf token needed to send with the request
     Returns:    a string of the POST request message headers that will be sent
     '''
     # content/params
-    form_data = f"username={USERNAME}&password={PASSWORD}&csrfmiddlewaretoken={csrf_token}&next=%2Ffakebook%2F\r\n\r\n"
+    form_data = f"username={username}&password={password}&csrfmiddlewaretoken={csrf_token}&next=%2Ffakebook%2F\r\n\r\n"
     # headers
     method_header = "POST /accounts/login/?next=/fakebook/ HTTP/1.1"
     host_header = f"Host: {HOST}"
@@ -135,7 +134,7 @@ def crawl_next_url(parser):
             parser.urls_queued.pop(0)
     return url
 
-def main():
+def main(args):
     # connect socket
     connection = create_connection()
     prev_url = ""
@@ -147,7 +146,7 @@ def main():
     # go to login page and get csrf token
     csrf_token = get_login_token(connection)
     # login using token
-    post_login_msg = login_post_request(csrf_token)
+    post_login_msg = login_post_request(csrf_token, args.username, args.password)
     # send POST request
     connection.sendall(post_login_msg.encode(FORMAT))
     # get request response
@@ -223,7 +222,7 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("USERNAME", type=str, action="store", help="USERNAME")
-    parser.add_argument("PASSWORD", type=str, action="store", help="PASSWORD")
+    parser.add_argument("username", type=str, action="store", help="username")
+    parser.add_argument("password", type=str, action="store", help="password")
     args = parser.parse_args()
-    main()
+    main(args)
