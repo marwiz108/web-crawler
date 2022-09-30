@@ -26,7 +26,8 @@ def create_connection():
     '''
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s = ssl.wrap_socket(s, ssl_version=ssl.PROTOCOL_TLS)
+        context = ssl.create_default_context()
+        s = context.wrap_socket(s, server_hostname=HOST)
         s.connect((HOST, PORT))
     except:
         sys.exit("Cannot establish socket connection")
