@@ -67,7 +67,14 @@ def get_response_status(status_header):
     Parameters: status_header - the header line containing the http info
     Returns:    the http status code number
     '''
-    return int(status_header.split()[1])
+    status = status_header.split()[1]
+
+    if (status in ["200", "301", "302", "403", "404", "500", "503"]):
+        return int(status)
+    elif ("<title>Fakebook</title>" in status_header):
+        return 200
+    elif ("503" in status_header):
+        return 503
 
 def get_login_token(connection):
     '''
@@ -208,7 +215,7 @@ def main():
                 csrf_token = cookie[cookie.index("csrftoken=")+len("csrftoken="):cookie.index(";")]
             if ("sessionid=" in cookie):
                 session_id = cookie[cookie.index("sessionid=")+len("sessionid="):cookie.index(";", cookie.index("sessionid="))]
-        
+
         if len(parser.secret_flags) == 5:
             break
 
