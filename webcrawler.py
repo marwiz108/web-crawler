@@ -94,8 +94,6 @@ def get_login_token(connection):
     response_body = request_response[1] if len(request_response) == 2 else ''
     # parse headers dict
     headers = get_headers(response_headers)
-    # get response status
-    status = get_response_status(response_headers[0])
     # get csrf token
     cookie = headers["Set-Cookie"]
     csrf = cookie[cookie.index("csrftoken=")+len("csrftoken="):cookie.index(";")]
@@ -183,9 +181,6 @@ def main():
             redirect_url = headers["Location"]
             redirect_url = redirect_url.replace("%0D%0A%0D%0A", "")
             # build new GET request message
-            method_header = f"GET {redirect_url} HTTP/1.1"
-            host_header = f"Host: {HOST}"
-            cookies_header = f"Cookie: csrftoken={csrf_token}; sessionid={session_id}\r\n\r\n"
             request_msg = get_request_message(redirect_url, csrf_token, session_id)
 
         elif status == 403 or status == 404:
